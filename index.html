@@ -136,16 +136,14 @@
             height: 40vh;
             background: linear-gradient(180deg, 
                 transparent,
-                rgba(230, 213, 172, 0.05) 20%,
-                rgba(230, 213, 172, 0.1) 40%,
-                rgba(230, 213, 172, 0.15) 60%,
-                rgba(230, 213, 172, 0.2) 80%,
-                rgba(230, 213, 172, 0.25) 100%
+                rgba(0, 40, 40, 0.3) 20%,
+                rgba(0, 40, 40, 0.5) 40%,
+                rgba(0, 40, 40, 0.7) 60%,
+                rgba(0, 40, 40, 0.9) 80%,
+                rgba(0, 40, 40, 1) 100%
             );
             transform-style: preserve-3d;
             transform: translateZ(-500px);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
         }
 
         .ripple {
@@ -155,9 +153,6 @@
             animation: rippleEffect 4s linear infinite;
             opacity: 0;
             transform-style: preserve-3d;
-            background: radial-gradient(circle at center,
-                rgba(230, 213, 172, 0.1) 0%,
-                transparent 70%);
         }
 
         @keyframes rippleEffect {
@@ -182,8 +177,8 @@
             overflow-x: hidden;
             padding-bottom: calc(2rem + var(--safe-area-inset-bottom));
             background: radial-gradient(circle at top right, 
-                rgba(230, 213, 172, 0.03) 0%,
-                transparent 70%);
+                rgba(230, 213, 172, 0.05) 0%,
+                transparent 50%);
         }
 
         .content.visible {
@@ -207,9 +202,6 @@
             position: relative;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            background: radial-gradient(circle at center,
-                rgba(230, 213, 172, 0.02) 0%,
-                transparent 100%);
         }
 
         .section.visible {
@@ -274,11 +266,6 @@
             box-shadow: var(--shadow-soft);
         }
 
-        .urdu-name.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
         .urdu-name:hover {
             transform: scale(1.02);
             box-shadow: var(--shadow-strong);
@@ -309,11 +296,6 @@
             box-shadow: var(--shadow-soft);
         }
 
-        .meaning.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
         .wish-card {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -332,14 +314,34 @@
             width: 90%;
         }
 
-        .wish-card.visible {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
         .wish-card:hover {
             box-shadow: var(--shadow-strong);
             transform: translateY(-5px);
+        }
+
+        .wish-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-secondary);
+            transform: translateX(-100%);
+            transition: transform var(--transition-medium);
+        }
+
+        .wish-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .wish-card p {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            line-height: 1.8;
+            color: var(--text-color);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
         }
 
         .lantern {
@@ -825,12 +827,6 @@
             <div class="urdu-name" onclick="createParticles()">ادین</div>
             <div class="meaning">Eternal Paradise</div>
         </section>
-
-        <div class="wish-card">
-            <p>Dear Aden (ادین),</p>
-            <p>On this special day, may the moonlight guide your path, and may your heart be as bright as the stars above.</p>
-            <p>Happy Birthday! 🎂✨</p>
-        </div>
 
         <div class="envelope-container">
             <div class="envelope">
