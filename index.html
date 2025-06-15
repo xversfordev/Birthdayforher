@@ -576,6 +576,15 @@
             background: rgba(230, 213, 172, 0.8);
         }
 
+        /* Heart Icon */
+        .heart-icon {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 5px;
+            font-size: 1.2em; /* Adjust size as needed */
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
         /* Envelope Animation Styles */
         .envelope-container {
             position: relative;
@@ -793,6 +802,14 @@
             <div class="meaning">Eternal Paradise</div>
         </section>
 
+        <section class="section" id="wish-card-section">
+            <div class="wish-card visible">
+                <p>Dear Aden (ادین),</p>
+                <p>On this special day, may the moonlight guide your path, and may your heart <span class="heart-icon">❤️</span> be as bright as the stars above.</p>
+                <p>Happy Birthday! 🎂✨</p>
+            </div>
+        </section>
+
         <div class="envelope-container">
             <div class="envelope">
                 <div class="envelope-flap"></div>
@@ -874,7 +891,7 @@
             }
         }
 
-        // Update the Intersection Observer to ensure proper visibility
+        // Intersection Observer for scroll animations
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -885,13 +902,9 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    // Ensure child elements also become visible
                     if (entry.target.classList.contains('section')) {
-                        const elements = entry.target.querySelectorAll('.birthday-title, .urdu-name, .meaning, .wish-card');
-                        elements.forEach(el => {
-                            setTimeout(() => {
-                                el.classList.add('visible');
-                            }, 200); // Stagger the animations
+                        entry.target.querySelectorAll('.birthday-title, .urdu-name, .meaning, .wish-card').forEach(el => {
+                            el.classList.add('visible');
                         });
                     }
                 }
@@ -899,51 +912,9 @@
         }, observerOptions);
 
         // Observe all sections and elements
-        document.querySelectorAll('.section, .birthday-title, .urdu-name, .meaning, .wish-card, .envelope-container').forEach(el => {
+        document.querySelectorAll('.section, .birthday-title, .urdu-name, .meaning, .wish-card').forEach(el => {
             observer.observe(el);
         });
-
-        // Ensure content is visible on load
-        window.addEventListener('load', () => {
-            const loadingOverlay = document.querySelector('.loading-overlay');
-            if (loadingOverlay) {
-                loadingOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    loadingOverlay.remove();
-                    // Make initial content visible
-                    document.querySelector('.content').classList.add('visible');
-                    document.querySelector('.section').classList.add('visible');
-                    const initialElements = document.querySelectorAll('.birthday-title, .urdu-name, .meaning');
-                    initialElements.forEach((el, index) => {
-                        setTimeout(() => {
-                            el.classList.add('visible');
-                        }, index * 200); // Stagger the animations
-                    });
-                }, 800);
-            }
-            createStars();
-            createRipples();
-            createLanterns();
-        });
-
-        // Add a function to check and fix visibility
-        function ensureVisibility() {
-            const elements = document.querySelectorAll('.birthday-title, .urdu-name, .meaning, .wish-card');
-            elements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    el.classList.add('visible');
-                }
-            });
-        }
-
-        // Check visibility on scroll
-        window.addEventListener('scroll', () => {
-            requestAnimationFrame(ensureVisibility);
-        }, { passive: true });
-
-        // Initial visibility check
-        ensureVisibility();
 
         // Parallax effect on mouse move
         document.addEventListener('mousemove', (e) => {
@@ -973,6 +944,21 @@
             }
         }
 
+        // Initialize animations
+        window.addEventListener('load', () => {
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.remove();
+                }, 800);
+            }
+            createStars();
+            createRipples();
+            createLanterns();
+            document.querySelector('.content').classList.add('visible');
+        });
+
         // Handle window resize
         let resizeTimeout;
         window.addEventListener('resize', () => {
@@ -989,7 +975,7 @@
         const particlesContainer = document.querySelector('.envelope-particles');
 
         // Create particles
-        function createParticles() {
+        function createEnvelopeParticles() {
             for (let i = 0; i < 30; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
@@ -1004,7 +990,7 @@
         }
 
         // Animate particles
-        function animateParticles() {
+        function animateEnvelopeParticles() {
             const particles = document.querySelectorAll('.particle');
             particles.forEach(particle => {
                 particle.style.animation = `particleFloat ${Math.random() * 2 + 1}s ease-out forwards`;
@@ -1015,7 +1001,7 @@
         envelope.addEventListener('click', () => {
             envelope.classList.toggle('open');
             if (envelope.classList.contains('open')) {
-                animateParticles();
+                animateEnvelopeParticles();
             }
         });
 
@@ -1024,7 +1010,7 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    createParticles();
+                    createEnvelopeParticles();
                 }
             });
         }, { threshold: 0.2 });
@@ -1051,58 +1037,6 @@
         envelope.addEventListener('mouseleave', () => {
             envelope.style.transform = 'rotateX(0) rotateY(0)';
         });
-
-        // Optimize parallax for touch devices
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-
-        document.addEventListener('touchmove', (e) => {
-            if (!touchStartX || !touchStartY) return;
-
-            const touchX = e.touches[0].clientX;
-            const touchY = e.touches[0].clientY;
-            
-            const x = (touchX - touchStartX) / 20;
-            const y = (touchY - touchStartY) / 20;
-
-            document.querySelector('.parallax-container').style.transform = 
-                `translateX(${x}px) translateY(${y}px)`;
-
-            document.querySelectorAll('.star').forEach(star => {
-                const depth = parseFloat(star.style.transform.match(/-?\d+/)[0]);
-                const moveX = x * (depth / 1000);
-                const moveY = y * (depth / 1000);
-                star.style.transform = `translateZ(${depth}px) translateX(${moveX}px) translateY(${moveY}px)`;
-            });
-        }, { passive: true });
-
-        document.addEventListener('touchend', () => {
-            touchStartX = 0;
-            touchStartY = 0;
-            document.querySelector('.parallax-container').style.transform = 'translateX(0) translateY(0)';
-        }, { passive: true });
-
-        // Optimize scroll performance
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            if (!scrollTimeout) {
-                scrollTimeout = setTimeout(() => {
-                    scrollTimeout = null;
-                    // Update elements that need to be updated on scroll
-                    document.querySelectorAll('.section').forEach(section => {
-                        const rect = section.getBoundingClientRect();
-                        if (rect.top < window.innerHeight && rect.bottom > 0) {
-                            section.classList.add('visible');
-                        }
-                    });
-                }, 100);
-            }
-        }, { passive: true });
 
         // Add touch feedback
         function createTouchFeedback(e) {
