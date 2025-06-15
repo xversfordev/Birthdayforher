@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Aden! 🎂</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe6f0, #ffd1dc, #ffb6c1);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            position: relative;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+                        0 0 0 1px rgba(255, 255, 255, 0.3);
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 2s ease-in;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .birthday-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4.5rem;
+            background: linear-gradient(45deg, #ff69b4, #da70d6, #ba55d3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 2px;
+        }
+
+        .name {
+            font-size: 5rem;
+            background: linear-gradient(45deg, #9c27b0, #e91e63, #ff1493);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 1.5rem 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: glow 2s ease-in-out infinite;
+            font-family: 'Dancing Script', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .name:hover {
+            transform: scale(1.1) rotate(-5deg);
+            filter: brightness(1.2);
+        }
+
+        .name::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, #ff69b4, #da70d6);
+            transition: width 0.3s ease;
+        }
+
+        .name:hover::after {
+            width: 80%;
+        }
+
+        .meaning {
+            font-size: 1.6rem;
+            color: #666;
+            margin-bottom: 2.5rem;
+            font-style: italic;
+            font-family: 'Dancing Script', cursive;
+            animation: shimmer 2s infinite;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes shimmer {
+            0% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+            100% { opacity: 0.7; transform: scale(1); }
+        }
+
+        .wishes {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: #444;
+            margin: 2.5rem 0;
+            opacity: 0;
+            animation: fadeInWishes 1s ease-in forwards;
+            animation-delay: 1s;
+        }
+
+        @keyframes fadeInWishes {
+            to { opacity: 1; }
+        }
+
+        .wish-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.5s ease forwards;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .wish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .wish-card:nth-child(1) { animation-delay: 1.2s; }
+        .wish-card:nth-child(2) { animation-delay: 1.4s; }
+        .wish-card:nth-child(3) { animation-delay: 1.6s; }
+        .wish-card:nth-child(4) { animation-delay: 1.8s; }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .cake-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            margin: 2.5rem 0;
+            transition: transform 0.3s ease;
+        }
+
+        .cake {
+            font-size: 7rem;
+            animation: bounce 2s ease infinite;
+            filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.6));
+            transition: all 0.3s ease;
+        }
+
+        .cake-container:hover .cake {
+            animation: shake 0.5s ease infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 105, 180, 0.8));
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-element {
+            position: absolute;
+            font-size: 2.5rem;
+            animation: floatElement 6s linear infinite;
+            opacity: 0.6;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+
+        @keyframes floatElement {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 0.8;
+                transform: translateY(50vh) rotate(180deg) scale(1.2);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .interactive-button {
+            background: linear-gradient(45deg, #ff69b4, #da70d6);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 30px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interactive-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .interactive-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .interactive-button:hover::before {
+            left: 100%;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+            animation: confetti-fall 3s ease-in infinite;
+            z-index: 1000;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+                transform: translateY(50vh) rotate(180deg) scale(1.2);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+                width: 95%;
+            }
+
+            .birthday-title {
+                font-size: 3.5rem;
+            }
+
+            .name {
+                font-size: 4rem;
+            }
+
+            .meaning {
+                font-size: 1.4rem;
+            }
+
+            .wish-card {
+                padding: 1.5rem;
+            }
+
+            .cake {
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements" id="floatingElements"></div>
+    <div class="container">
+        <h1 class="birthday-title">Happy Birthday</h1>
+        <div class="name" onclick="createConfetti()">Aden</div>
+        <div class="meaning">Eternal Paradise</div>
+        
+        <div class="cake-container" onclick="createConfetti()">
+            <div class="cake">🎂</div>
+        </div>
+
+        <div class="wishes">
+            <div class="wish-card">
+                <p>Dearest Aden, as your name suggests - an Eternal Paradise - may your life be filled with endless joy, love, and beautiful moments that make your heart sing. Like a garden in eternal bloom, your presence brings beauty to every space you grace.</p>
+            </div>
+            <div class="wish-card">
+                <p>May your days be filled with the sweet fragrance of happiness, the gentle breeze of peace, and the warm sunshine of love. Your kindness and grace make the world a more beautiful place, just like a paradise on earth.</p>
+            </div>
+            <div class="wish-card">
+                <p>Your smile continues to light up the world like stars in the night sky, and your beautiful spirit inspires everyone around you. May your journey through life be as magical and enchanting as your name suggests.</p>
+            </div>
+            <div class="wish-card">
+                <p>On this special day, I wish you a year ahead filled with magical moments, wonderful adventures, and dreams that come true. May your life be an eternal paradise of love, laughter, and beautiful memories. Happy Birthday, beautiful Aden! 🌟</p>
+            </div>
+        </div>
+
+        <button class="interactive-button" onclick="showSpecialMessage()">Click for a Special Message</button>
+    </div>
+
+    <script>
+        // Create floating elements
+        function createFloatingElements() {
+            const elements = ['✨', '🌸', '💖', '🌟', '🎀', '💫', '🌺', '💝', '🌷', '🦋'];
+            const container = document.getElementById('floatingElements');
+            
+            for (let i = 0; i < 25; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.textContent = elements[Math.floor(Math.random() * elements.length)];
+                element.style.left = Math.random() * 100 + 'vw';
+                element.style.animationDelay = Math.random() * 6 + 's';
+                element.style.fontSize = (Math.random() * 1 + 1.5) + 'rem';
+                container.appendChild(element);
+            }
+        }
+
+        // Create confetti
+        function createConfetti() {
+            const colors = ['#ff69b4', '#da70d6', '#ba55d3', '#ff1493', '#ffb6c1', '#ffc0cb'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.width = (Math.random() * 5 + 5) + 'px';
+                confetti.style.height = (Math.random() * 5 + 5) + 'px';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Special message
+        function showSpecialMessage() {
+            const messages = [
+                "You are as beautiful as a garden in eternal bloom! 🌸",
+                "Your smile lights up the world like stars in the night sky! ✨",
+                "May your day be as magical as you are! 🎀",
+                "Sending you oceans of love and mountains of joy! 💖",
+                "You make the world a better place just by being you! 🌟",
+                "Like a butterfly in paradise, may your life be filled with beauty and grace! 🦋",
+                "Your kindness blooms like eternal flowers in the garden of life! 🌺",
+                "May your heart always dance with joy and your spirit soar with dreams! 💫"
+            ];
+            
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            alert(message);
+            createConfetti();
+        }
+
+        // Initialize animations
+        window.addEventListener('load', () => {
+            createFloatingElements();
+            // Add hover effect to wish cards
+            document.querySelectorAll('.wish-card').forEach(card => {
+                card.addEventListener('mouseover', () => {
+                    card.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseout', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+        // Add 3D tilt effect to container
+        document.querySelector('.container').addEventListener('mousemove', (e) => {
+            const container = e.currentTarget;
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 30;
+            const rotateY = (centerX - x) / 30;
+            
+            container.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        document.querySelector('.container').addEventListener('mouseleave', (e) => {
+            e.currentTarget.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+        });
+    </script>
+</body>
+</html> 
