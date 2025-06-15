@@ -16,12 +16,18 @@
             --transition-slow: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-medium: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-fast: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --safe-area-inset-top: env(safe-area-inset-top, 0px);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-inset-left: env(safe-area-inset-left, 0px);
+            --safe-area-inset-right: env(safe-area-inset-right, 0px);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
             scroll-behavior: smooth;
         }
 
@@ -32,6 +38,10 @@
             overflow-x: hidden;
             perspective: 1000px;
             min-height: 100vh;
+            width: 100%;
+            position: relative;
+            touch-action: pan-y;
+            padding: var(--safe-area-inset-top) var(--safe-area-inset-left) var(--safe-area-inset-bottom) var(--safe-area-inset-right);
         }
 
         .parallax-container {
@@ -42,6 +52,8 @@
             height: 100vh;
             z-index: -1;
             overflow: hidden;
+            will-change: transform; /* Optimize performance */
+            transform: translateZ(0); /* Force GPU acceleration */
         }
 
         .stars {
@@ -144,7 +156,7 @@
         .content {
             position: relative;
             z-index: 1;
-            padding: 2rem;
+            padding: 1rem;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -153,6 +165,10 @@
             opacity: 0;
             transform: translateY(50px);
             transition: opacity var(--transition-slow), transform var(--transition-slow);
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+            padding-bottom: calc(2rem + var(--safe-area-inset-bottom));
         }
 
         .content.visible {
@@ -164,10 +180,16 @@
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 4rem 2rem;
+            padding: 2rem 1rem;
             opacity: 0;
             transform: translateY(50px);
             transition: all var(--transition-slow);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
 
         .section.visible {
@@ -375,18 +397,156 @@
 
         @media (max-width: 768px) {
             .section {
-                padding: 2rem 1rem;
+                padding: 1rem;
+                min-height: 100vh;
+                padding-top: calc(1rem + var(--safe-area-inset-top));
+                padding-bottom: calc(1rem + var(--safe-area-inset-bottom));
             }
 
             .moon {
-                width: 100px;
-                height: 100px;
-                top: 5vh;
+                width: 80px;
+                height: 80px;
+                top: calc(5vh + var(--safe-area-inset-top));
                 right: 5vw;
             }
 
             .wish-card {
-                padding: 1.5rem;
+                padding: 1rem;
+                margin: 1rem 0;
+                width: 90%;
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+            }
+
+            .birthday-title {
+                font-size: clamp(2.5rem, 6vw, 4rem);
+                margin-bottom: 1rem;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+
+            .urdu-name {
+                font-size: clamp(3rem, 8vw, 6rem);
+                margin: 1rem 0;
+                padding: 0.5rem;
+                border-radius: 10px;
+                transition: transform 0.2s ease-out;
+            }
+
+            .urdu-name:active {
+                transform: scale(0.98);
+            }
+
+            .meaning {
+                font-size: clamp(1.2rem, 3vw, 1.5rem);
+                margin: 1rem 0;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            }
+
+            .envelope-container {
+                margin: 2rem auto;
+                width: 90%;
+                transform-origin: center center;
+            }
+
+            .envelope {
+                transition: transform 0.2s ease-out;
+            }
+
+            .envelope:active {
+                transform: scale(0.98);
+            }
+
+            .envelope-message {
+                font-size: clamp(1rem, 2.5vw, 1.3rem);
+                padding: 0 1rem;
+                line-height: 1.6;
+            }
+
+            .scroll-indicator {
+                bottom: calc(1rem + var(--safe-area-inset-bottom));
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+                background: rgba(230, 213, 172, 0.1);
+                border-radius: 20px;
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+            }
+
+            .scroll-indicator:active {
+                transform: translateY(-5px) translateX(-50%) scale(0.95);
+            }
+
+            /* Optimize animations for mobile */
+            .star {
+                animation-duration: calc(var(--duration) * 1.5);
+                will-change: transform, opacity;
+            }
+
+            .lantern {
+                display: none;
+            }
+
+            /* Improve touch targets */
+            .urdu-name, .envelope, .scroll-indicator {
+                min-height: 44px;
+                min-width: 44px;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* Add pull-to-refresh visual feedback */
+            .pull-to-refresh {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease-out;
+                z-index: 1000;
+            }
+
+            .pull-to-refresh.active {
+                transform: translateY(0);
+            }
+
+            .pull-to-refresh-spinner {
+                width: 24px;
+                height: 24px;
+                border: 2px solid var(--primary-color);
+                border-top-color: transparent;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+        }
+
+        /* Add styles for very small screens */
+        @media (max-width: 360px) {
+            .section {
+                padding: 0.5rem;
+            }
+
+            .birthday-title {
+                font-size: clamp(2rem, 5vw, 3rem);
+            }
+
+            .urdu-name {
+                font-size: clamp(2.5rem, 7vw, 5rem);
+            }
+
+            .meaning {
+                font-size: clamp(1rem, 2.5vw, 1.2rem);
+            }
+        }
+
+        /* Optimize scrollbar for touch devices */
+        @media (hover: none) {
+            ::-webkit-scrollbar {
+                width: 0;
+                background: transparent;
             }
         }
 
@@ -567,6 +727,50 @@
             0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
             100% { transform: translate(var(--tx), var(--ty)) rotate(360deg); opacity: 0; }
         }
+
+        /* Loading state */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary-color);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity var(--transition-slow);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--primary-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Touch feedback styles */
+        .touch-feedback {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(230, 213, 172, 0.2) 0%, transparent 70%);
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+
+        .touch-feedback.active {
+            transform: translate(-50%, -50%) scale(2);
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -719,6 +923,13 @@
 
         // Initialize animations
         window.addEventListener('load', () => {
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.remove();
+                }, 800);
+            }
             createStars();
             createRipples();
             createLanterns();
@@ -803,6 +1014,159 @@
         envelope.addEventListener('mouseleave', () => {
             envelope.style.transform = 'rotateX(0) rotateY(0)';
         });
+
+        // Optimize parallax for touch devices
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!touchStartX || !touchStartY) return;
+
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+            
+            const x = (touchX - touchStartX) / 20;
+            const y = (touchY - touchStartY) / 20;
+
+            document.querySelector('.parallax-container').style.transform = 
+                `translateX(${x}px) translateY(${y}px)`;
+
+            document.querySelectorAll('.star').forEach(star => {
+                const depth = parseFloat(star.style.transform.match(/-?\d+/)[0]);
+                const moveX = x * (depth / 1000);
+                const moveY = y * (depth / 1000);
+                star.style.transform = `translateZ(${depth}px) translateX(${moveX}px) translateY(${moveY}px)`;
+            });
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+            touchStartX = 0;
+            touchStartY = 0;
+            document.querySelector('.parallax-container').style.transform = 'translateX(0) translateY(0)';
+        }, { passive: true });
+
+        // Optimize scroll performance
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    scrollTimeout = null;
+                    // Update elements that need to be updated on scroll
+                    document.querySelectorAll('.section').forEach(section => {
+                        const rect = section.getBoundingClientRect();
+                        if (rect.top < window.innerHeight && rect.bottom > 0) {
+                            section.classList.add('visible');
+                        }
+                    });
+                }, 100);
+            }
+        }, { passive: true });
+
+        // Add touch feedback
+        function createTouchFeedback(e) {
+            const feedback = document.createElement('div');
+            feedback.className = 'touch-feedback';
+            feedback.style.left = e.touches[0].clientX + 'px';
+            feedback.style.top = e.touches[0].clientY + 'px';
+            document.body.appendChild(feedback);
+            
+            requestAnimationFrame(() => {
+                feedback.classList.add('active');
+            });
+
+            setTimeout(() => {
+                feedback.classList.remove('active');
+                setTimeout(() => feedback.remove(), 300);
+            }, 300);
+        }
+
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.closest('.urdu-name, .envelope, .scroll-indicator')) {
+                createTouchFeedback(e);
+            }
+        }, { passive: true });
+
+        // Add pull-to-refresh
+        let pullToRefreshStartY = 0;
+        let pullToRefresh = null;
+
+        function initPullToRefresh() {
+            if (window.innerWidth <= 768) {
+                if (!pullToRefresh) {
+                    pullToRefresh = document.createElement('div');
+                    pullToRefresh.className = 'pull-to-refresh';
+                    pullToRefresh.innerHTML = '<div class="pull-to-refresh-spinner"></div>';
+                    document.body.appendChild(pullToRefresh);
+                }
+
+                document.addEventListener('touchstart', (e) => {
+                    if (window.scrollY === 0) {
+                        pullToRefreshStartY = e.touches[0].clientY;
+                    }
+                }, { passive: true });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (pullToRefreshStartY && window.scrollY === 0) {
+                        const touchY = e.touches[0].clientY;
+                        const pullDistance = touchY - pullToRefreshStartY;
+                        
+                        if (pullDistance > 0) {
+                            e.preventDefault();
+                            pullToRefresh.style.transform = `translateY(${Math.min(pullDistance / 2, 60)}px)`;
+                            
+                            if (pullDistance > 100) {
+                                pullToRefresh.classList.add('active');
+                            }
+                        }
+                    }
+                }, { passive: false });
+
+                document.addEventListener('touchend', () => {
+                    if (pullToRefresh.classList.contains('active')) {
+                        window.location.reload();
+                    } else {
+                        pullToRefresh.style.transform = 'translateY(-100%)';
+                    }
+                    pullToRefreshStartY = 0;
+                }, { passive: true });
+            }
+        }
+
+        // Initialize pull-to-refresh
+        initPullToRefresh();
+        window.addEventListener('resize', initPullToRefresh);
+
+        // Optimize scroll performance with Intersection Observer
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    if (entry.target.classList.contains('section')) {
+                        entry.target.querySelectorAll('.birthday-title, .urdu-name, .meaning, .wish-card').forEach(el => {
+                            el.classList.add('visible');
+                        });
+                    }
+                }
+            });
+        }, {
+            rootMargin: '50px 0px',
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.section, .birthday-title, .urdu-name, .meaning, .wish-card').forEach(el => {
+            scrollObserver.observe(el);
+        });
+
+        // Add loading overlay to HTML
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.className = 'loading-overlay';
+        loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+        document.body.appendChild(loadingOverlay);
     </script>
 </body>
 </html> 
