@@ -215,7 +215,7 @@
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
+            color: var(--primary-color);
             text-align: center;
             margin-bottom: 2rem;
             text-shadow: 0 0 20px rgba(230, 213, 172, 0.3);
@@ -226,20 +226,9 @@
             position: relative;
         }
 
-        .birthday-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 2px;
-            background: var(--gradient-primary);
-            transition: width var(--transition-medium);
-        }
-
-        .birthday-title.visible::after {
-            width: 80%;
+        .birthday-title.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .urdu-name {
@@ -248,7 +237,7 @@
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
+            color: var(--primary-color);
             text-align: center;
             margin: 2rem 0;
             text-shadow: 0 0 30px rgba(230, 213, 172, 0.4);
@@ -266,13 +255,9 @@
             box-shadow: var(--shadow-soft);
         }
 
-        .urdu-name:hover {
-            transform: scale(1.02);
-            box-shadow: var(--shadow-strong);
-        }
-
-        .urdu-name:active {
-            transform: scale(0.98);
+        .urdu-name.visible {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .meaning {
@@ -280,7 +265,7 @@
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
+            color: var(--primary-color);
             text-align: center;
             margin: 2rem 0;
             font-style: italic;
@@ -294,6 +279,11 @@
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow-soft);
+        }
+
+        .meaning.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .wish-card {
@@ -314,34 +304,9 @@
             width: 90%;
         }
 
-        .wish-card:hover {
-            box-shadow: var(--shadow-strong);
-            transform: translateY(-5px);
-        }
-
-        .wish-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-secondary);
-            transform: translateX(-100%);
-            transition: transform var(--transition-medium);
-        }
-
-        .wish-card:hover::before {
-            transform: translateX(100%);
-        }
-
-        .wish-card p {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            line-height: 1.8;
-            color: var(--text-color);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
+        .wish-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .lantern {
@@ -909,7 +874,7 @@
             }
         }
 
-        // Intersection Observer for scroll animations
+        // Update the Intersection Observer to ensure proper visibility
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -920,9 +885,13 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    // Ensure child elements also become visible
                     if (entry.target.classList.contains('section')) {
-                        entry.target.querySelectorAll('.birthday-title, .urdu-name, .meaning, .wish-card').forEach(el => {
-                            el.classList.add('visible');
+                        const elements = entry.target.querySelectorAll('.birthday-title, .urdu-name, .meaning, .wish-card');
+                        elements.forEach(el => {
+                            setTimeout(() => {
+                                el.classList.add('visible');
+                            }, 200); // Stagger the animations
                         });
                     }
                 }
@@ -930,9 +899,51 @@
         }, observerOptions);
 
         // Observe all sections and elements
-        document.querySelectorAll('.section, .birthday-title, .urdu-name, .meaning, .wish-card').forEach(el => {
+        document.querySelectorAll('.section, .birthday-title, .urdu-name, .meaning, .wish-card, .envelope-container').forEach(el => {
             observer.observe(el);
         });
+
+        // Ensure content is visible on load
+        window.addEventListener('load', () => {
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.remove();
+                    // Make initial content visible
+                    document.querySelector('.content').classList.add('visible');
+                    document.querySelector('.section').classList.add('visible');
+                    const initialElements = document.querySelectorAll('.birthday-title, .urdu-name, .meaning');
+                    initialElements.forEach((el, index) => {
+                        setTimeout(() => {
+                            el.classList.add('visible');
+                        }, index * 200); // Stagger the animations
+                    });
+                }, 800);
+            }
+            createStars();
+            createRipples();
+            createLanterns();
+        });
+
+        // Add a function to check and fix visibility
+        function ensureVisibility() {
+            const elements = document.querySelectorAll('.birthday-title, .urdu-name, .meaning, .wish-card');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        // Check visibility on scroll
+        window.addEventListener('scroll', () => {
+            requestAnimationFrame(ensureVisibility);
+        }, { passive: true });
+
+        // Initial visibility check
+        ensureVisibility();
 
         // Parallax effect on mouse move
         document.addEventListener('mousemove', (e) => {
@@ -961,21 +972,6 @@
                 currentSection.scrollIntoView({ behavior: 'smooth' });
             }
         }
-
-        // Initialize animations
-        window.addEventListener('load', () => {
-            const loadingOverlay = document.querySelector('.loading-overlay');
-            if (loadingOverlay) {
-                loadingOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    loadingOverlay.remove();
-                }, 800);
-            }
-            createStars();
-            createRipples();
-            createLanterns();
-            document.querySelector('.content').classList.add('visible');
-        });
 
         // Handle window resize
         let resizeTimeout;
