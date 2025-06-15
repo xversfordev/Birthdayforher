@@ -136,14 +136,16 @@
             height: 40vh;
             background: linear-gradient(180deg, 
                 transparent,
-                rgba(0, 40, 40, 0.3) 20%,
-                rgba(0, 40, 40, 0.5) 40%,
-                rgba(0, 40, 40, 0.7) 60%,
-                rgba(0, 40, 40, 0.9) 80%,
-                rgba(0, 40, 40, 1) 100%
+                rgba(230, 213, 172, 0.05) 20%,
+                rgba(230, 213, 172, 0.1) 40%,
+                rgba(230, 213, 172, 0.15) 60%,
+                rgba(230, 213, 172, 0.2) 80%,
+                rgba(230, 213, 172, 0.25) 100%
             );
             transform-style: preserve-3d;
             transform: translateZ(-500px);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
 
         .ripple {
@@ -153,6 +155,9 @@
             animation: rippleEffect 4s linear infinite;
             opacity: 0;
             transform-style: preserve-3d;
+            background: radial-gradient(circle at center,
+                rgba(230, 213, 172, 0.1) 0%,
+                transparent 70%);
         }
 
         @keyframes rippleEffect {
@@ -177,8 +182,8 @@
             overflow-x: hidden;
             padding-bottom: calc(2rem + var(--safe-area-inset-bottom));
             background: radial-gradient(circle at top right, 
-                rgba(230, 213, 172, 0.05) 0%,
-                transparent 50%);
+                rgba(230, 213, 172, 0.03) 0%,
+                transparent 70%);
         }
 
         .content.visible {
@@ -202,6 +207,9 @@
             position: relative;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
+            background: radial-gradient(circle at center,
+                rgba(230, 213, 172, 0.02) 0%,
+                transparent 100%);
         }
 
         .section.visible {
