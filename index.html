@@ -274,6 +274,11 @@
             box-shadow: var(--shadow-soft);
         }
 
+        .urdu-name.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
         .urdu-name:hover {
             transform: scale(1.02);
             box-shadow: var(--shadow-strong);
@@ -304,6 +309,11 @@
             box-shadow: var(--shadow-soft);
         }
 
+        .meaning.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .wish-card {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -322,34 +332,14 @@
             width: 90%;
         }
 
+        .wish-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
         .wish-card:hover {
             box-shadow: var(--shadow-strong);
             transform: translateY(-5px);
-        }
-
-        .wish-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-secondary);
-            transform: translateX(-100%);
-            transition: transform var(--transition-medium);
-        }
-
-        .wish-card:hover::before {
-            transform: translateX(100%);
-        }
-
-        .wish-card p {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            line-height: 1.8;
-            color: var(--text-color);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
         }
 
         .lantern {
@@ -835,6 +825,12 @@
             <div class="urdu-name" onclick="createParticles()">ادین</div>
             <div class="meaning">Eternal Paradise</div>
         </section>
+
+        <div class="wish-card">
+            <p>Dear Aden (ادین),</p>
+            <p>On this special day, may the moonlight guide your path, and may your heart be as bright as the stars above.</p>
+            <p>Happy Birthday! 🎂✨</p>
+        </div>
 
         <div class="envelope-container">
             <div class="envelope">
