@@ -407,6 +407,166 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(230, 213, 172, 0.8);
         }
+
+        /* Envelope Animation Styles */
+        .envelope-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 4rem auto;
+            perspective: 2000px;
+            transform-style: preserve-3d;
+            opacity: 0;
+            transform: translateY(100px) rotateX(10deg);
+            transition: all var(--transition-slow);
+        }
+
+        .envelope-container.visible {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(230, 213, 172, 0.1),
+                0 0 20px rgba(230, 213, 172, 0.1);
+            transform-style: preserve-3d;
+            transition: transform var(--transition-medium);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                transparent 0%,
+                rgba(230, 213, 172, 0.1) 45%,
+                rgba(230, 213, 172, 0.2) 50%,
+                rgba(230, 213, 172, 0.1) 55%,
+                transparent 100%
+            );
+            transform: translateZ(1px);
+            transition: transform var(--transition-medium);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            transform-origin: top;
+            transform: rotateX(0deg);
+            transition: transform var(--transition-medium);
+            z-index: 2;
+            border-radius: 20px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            transform: translateZ(-1px);
+            opacity: 0;
+            transition: opacity var(--transition-medium);
+        }
+
+        .envelope.open .envelope-content {
+            opacity: 1;
+        }
+
+        .envelope-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) translateZ(2px);
+            transition: transform var(--transition-medium), opacity var(--transition-medium);
+            z-index: 3;
+            box-shadow: 0 0 20px rgba(230, 213, 172, 0.3);
+        }
+
+        .envelope-seal::before {
+            content: '❤️';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+        }
+
+        .envelope.open .envelope-seal {
+            transform: translate(-50%, -50%) translateZ(2px) scale(0.8);
+            opacity: 0;
+        }
+
+        .envelope-message {
+            color: var(--primary-color);
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            text-align: center;
+            line-height: 1.6;
+            max-width: 80%;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all var(--transition-medium) 0.3s;
+        }
+
+        .envelope.open .envelope-message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .envelope-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary-color);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -440,6 +600,21 @@
                 <p>Happy Birthday, ادین — You are paradise in motion.</p>
             </div>
         </section>
+
+        <div class="envelope-container">
+            <div class="envelope">
+                <div class="envelope-flap"></div>
+                <div class="envelope-seal"></div>
+                <div class="envelope-content">
+                    <div class="envelope-message">
+                        <p>Dear Aden (ادین),</p>
+                        <p>On this special day, may the moonlight guide your path, and may your heart be as bright as the stars above.</p>
+                        <p>Happy Birthday! 🎂✨</p>
+                    </div>
+                </div>
+                <div class="envelope-particles"></div>
+            </div>
+        </div>
     </div>
 
     <div class="scroll-indicator" onclick="scrollToNextSection()">Scroll to Explore ↓</div>
@@ -576,6 +751,75 @@
                 document.getElementById('stars').innerHTML = '';
                 createStars();
             }, 250);
+        });
+
+        // Envelope Animation
+        const envelope = document.querySelector('.envelope');
+        const envelopeContainer = document.querySelector('.envelope-container');
+        const particlesContainer = document.querySelector('.envelope-particles');
+
+        // Create particles
+        function createParticles() {
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+                particle.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Animate particles
+        function animateParticles() {
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach(particle => {
+                particle.style.animation = `particleFloat ${Math.random() * 2 + 1}s ease-out forwards`;
+            });
+        }
+
+        // Handle envelope click
+        envelope.addEventListener('click', () => {
+            envelope.classList.toggle('open');
+            if (envelope.classList.contains('open')) {
+                animateParticles();
+            }
+        });
+
+        // Intersection Observer for envelope
+        const envelopeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    createParticles();
+                }
+            });
+        }, { threshold: 0.2 });
+
+        envelopeObserver.observe(envelopeContainer);
+
+        // Scroll-based envelope tilt effect
+        document.addEventListener('mousemove', (e) => {
+            if (!envelopeContainer.classList.contains('visible')) return;
+            
+            const rect = envelopeContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            envelope.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        envelope.addEventListener('mouseleave', () => {
+            envelope.style.transform = 'rotateX(0) rotateY(0)';
         });
     </script>
 </body>
